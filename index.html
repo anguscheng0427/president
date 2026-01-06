@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明帝國總統府 | Office of the President</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --ming-red: #660000; /* 帝國紅 */
+            --ming-gold: #CC9900; /* 皇室金 */
+            --bg-color: #f4f4f4;
+        }
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+        }
+        
+        .font-serif { font-family: 'Noto Serif TC', serif; }
+        
+        .text-gold { color: var(--ming-gold); }
+        .bg-gold { background-color: var(--ming-gold); }
+        .border-gold { border-color: var(--ming-gold); }
+        
+        .text-red { color: var(--ming-red); }
+        .bg-red { background-color: var(--ming-red); }
+        
+        /* 圖片佔位符樣式 - 模擬未載入時的樣子 */
+        .img-placeholder {
+            background-color: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .img-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.5;
+        }
+
+        .img-placeholder span {
+            z-index: 10;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        /* 肖像框特效 */
+        .portrait-frame {
+            box-shadow: 
+                inset 0 0 20px rgba(0,0,0,0.5),
+                0 0 0 8px #4a0404,
+                0 0 0 10px #CC9900,
+                0 10px 20px rgba(0,0,0,0.3);
+        }
+        
+        /* 國徽發光特效 */
+        .emblem-glow {
+            filter: drop-shadow(0 0 5px rgba(204, 153, 0, 0.5));
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- 頂部資訊列 -->
+    <div class="bg-gray-900 text-gray-400 text-xs py-2 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <div class="flex space-x-6">
+                <span class="text-gold tracking-widest uppercase font-bold">Great Ming Empire</span>
+                <!-- 這裡加上 id="imperial-date" 讓 JavaScript 控制 -->
+                <span id="imperial-date"><i class="far fa-calendar-alt mr-2"></i>載入中...</span>
+            </div>
+            <div class="hidden md:flex space-x-4">                
+                <a href="https://linevoom.line.me/user/_dUsRxJcBUnxLdfgDcrfaMuwLSRn4TDLahYpq-4Q" class="hover:text-white transition">最新動態</a>
+                <a href="#decrees" class="hover:text-white transition">帝國公報</a>
+                <a href="https://line.me/R/ti/p/@736xgnab" class="hover:text-white transition">總統信箱</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主導航欄 -->
+    <nav class="bg-red sticky top-0 z-50 shadow-xl border-b-4 border-gold">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 items-center">
+                <!-- 左側：國徽與標題 -->
+                <div class="flex items-center space-x-4">
+                    <!-- 國徽位置 -->
+                    <div class="w-16 h-16 md:w-20 md:h-20 bg-white rounded-full flex-shrink-0 border-2 border-gold emblem-glow overflow-hidden relative">
+                        <!-- 國徽圖片 -->
+                        <img src="assets/emblem2.png" alt="國徽" class="w-full h-full object-cover" onerror="this.style.display='none'">
+                        <!-- 圖片載入失敗時的替代顯示 -->
+                        <div class="absolute inset-0 flex items-center justify-center bg-red-900 text-gold" style="z-index:-1;">
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col justify-center">
+                        <h1 class="text-white font-serif text-2xl md:text-3xl tracking-[0.15em] font-bold drop-shadow-md">大明帝國總統府</h1>
+                        <p class="text-[10px] md:text-xs text-gold uppercase tracking-[0.2em] font-medium">Office of the President</p>
+                    </div>
+                </div>
+
+                <!-- 右側選單 -->
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-red-100">
+                    <a href="#" class="text-white border-b-2 border-gold pb-1">首頁</a>
+                    <a href="#decrees" class="hover:text-white hover:border-b-2 border-gold transition pb-1">總統令</a>
+                    <a href="#symbols" class="hover:text-white hover:border-b-2 border-gold transition pb-1">國家象徵</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 領袖風範區 (Hero Section) -->
+    <header class="relative bg-gray-900 min-h-[650px] flex items-center overflow-hidden">
+        <!-- 背景元素 -->
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')] opacity-30"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-black via-gray-900/90 to-transparent z-10"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 w-full relative z-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center h-full pt-8 lg:pt-0">
+            
+            <!-- 左側文字 -->
+            <div class="space-y-8 order-2 lg:order-1 pb-12 lg:pb-0">
+                <div class="inline-block border-l-8 border-gold pl-6">
+                    <h2 class="text-gold font-bold tracking-[0.3em] uppercase text-sm mb-3">President of the Empire</h2>
+                    <h1 class="text-5xl md:text-7xl font-serif font-black text-white leading-tight mb-2">
+                        賴 成左
+                    </h1>
+                    <p class="text-2xl text-gray-300 font-serif font-light">大明帝國 總統</p>
+                </div>
+                
+                <p class="text-lg text-gray-400 leading-relaxed max-w-xl border-t border-gray-700 pt-6">
+                    <span class="text-white font-bold">「以貓為本，以毛治國」</span><br>
+                    在賴總統的英明領導下，大明帝國邁入毛憲元年。總統強調，唯有貫徹清黨與確立正統，方能實現帝國的偉大復興。
+                </p>
+
+                <div class="flex space-x-4 pt-4">
+                    <a href="#decrees" class="bg-red hover:bg-red-800 text-white px-8 py-3 rounded-sm font-bold tracking-wide transition shadow-lg border border-red-800">
+                        總統令
+                    </a>
+                </div>
+            </div>
+
+            <!-- 右側：總統肖像位 (保留位) -->
+            <div class="order-1 lg:order-2 flex justify-center lg:justify-end relative">
+                <!-- 肖像框容器 -->
+                <div class="w-[350px] h-[480px] md:w-[400px] md:h-[550px] bg-gray-800 portrait-frame relative overflow-hidden group">
+                    <img src="assets/president.jpg" alt="賴成左總統肖像" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" onerror="this.style.display='none'">
+                    
+                    <!-- 圖片未載入時的顯示 -->
+                    <div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 text-gray-600 z-[-1]">
+                        <i class="fas fa-user-tie text-6xl mb-4"></i>
+                        <span class="text-sm border border-gray-600 px-2 py-1">總統玉照保留位</span>
+                    </div>
+
+                    <!-- 底部名牌 -->
+                    <div class="absolute bottom-0 w-full bg-gradient-to-t from-black via-black/80 to-transparent p-6 pt-12 text-center">
+                        <span class="text-gold font-serif text-xl font-bold tracking-widest border-b border-gold pb-1">賴成左 總統</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 跑馬燈 -->
+    <div class="bg-gold text-black py-2 overflow-hidden border-t-2 border-b-2 border-black shadow-md relative z-30">
+        <div class="max-w-7xl mx-auto flex items-center px-4">
+            <div class="bg-red text-white text-xs font-bold px-2 py-1 mr-4 shrink-0 whitespace-nowrap">重要快訊</div>
+            <marquee scrollamount="6" class="font-bold tracking-wider text-sm">
+                ★ 毛憲元年正式啟動 ★ 茲奉歐弟為護國神獸 ★ 毛線帝雉定為帝國神鳥 ★ 嚴厲執行清黨行動，全力肅清 P**gy 及其黨羽 ★ 恭賀無名濡先生榮升無星上將
+            </marquee>
+        </div>
+    </div>
+
+    <!-- 總統令發布區 -->
+    <main id="decrees" class="py-20 bg-gray-100">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-red font-bold tracking-widest uppercase text-sm">Official Gazette</span>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-gray-900 mt-2">總統府公報</h2>
+                <div class="w-24 h-1 bg-gold mx-auto mt-6"></div>
+            </div>
+
+            <div class="space-y-10">
+                
+                <!-- 總統令 No.1 -->
+                <article class="bg-white p-8 md:p-10 shadow-sm border-l-8 border-red relative">
+                    <div class="absolute top-4 right-6 text-6xl text-gray-100 font-serif font-bold pointer-events-none select-none">01</div>
+                    <div class="mb-6 border-b border-gray-200 pb-4">
+                        <h3 class="text-xl font-serif font-bold text-gray-900">總統令 <span class="text-sm font-sans font-normal text-gray-500 ml-2">毛總一義字第11500001號</span></h3>
+                        <p class="text-sm text-gray-400 mt-1">日期：毛憲元年 1月 5日</p>
+                    </div>
+                    <div class="font-serif text-lg leading-loose text-gray-800">
+                        <p>茲制定「<span class="font-bold text-red">毛憲帝制</span>」，定民國一一五年為「<span class="font-bold text-red">毛憲元年</span>」，並奉「毛線帝雉」為帝國神鳥、「歐弟」為護國神獸，以貓為本，以毛治國，此令。</p>
+                    </div>
+                    <div class="mt-8 text-right font-serif font-bold text-lg">總統　賴成左</div>
+                </article>
+
+                <!-- 總統令 No.2 (清黨) -->
+                <article class="bg-white p-8 md:p-10 shadow-lg border-l-8 border-black relative transform md:-rotate-1">
+                    <div class="absolute top-4 right-6 text-6xl text-gray-100 font-serif font-bold pointer-events-none select-none">02</div>
+                    <div class="mb-6 border-b border-gray-200 pb-4 flex justify-between items-center">
+                        <div>
+                            <h3 class="text-xl font-serif font-bold text-red">總統令 <span class="text-sm font-sans font-normal text-gray-500 ml-2">毛總一義字第11500002號</span></h3>
+                            <p class="text-sm text-gray-400 mt-1">日期：毛憲元年 1月 6日</p>
+                        </div>
+                    </div>
+                    <div class="font-serif text-lg leading-loose text-gray-800">
+                        <p>茲為維護「毛憲帝制」之正統，捍衛帝國核心價值，即日起實施「清黨」行動。</p>
+                        <p class="mt-4">凡對國策存有二心，或意圖擾亂帝國綱紀者，均應予嚴厲整肅。特別標註異議份子「<span class="bg-black text-white px-1">P**gy</span>」長期散播悖離皇綱之言論，涉嫌挑戰護國神獸之權威，列為首要肅清對象，即刻生效，此令。</p>
+                    </div>
+                    <div class="mt-8 text-right font-serif font-bold text-lg relative">
+                        總統　賴成左
+                    </div>
+                </article>
+
+                <!-- 總統令 No.3 (授勳) -->
+                <article class="bg-white p-8 md:p-10 shadow-sm border-l-8 border-gold relative">
+                    <div class="absolute top-4 right-6 text-6xl text-gray-100 font-serif font-bold pointer-events-none select-none">03</div>
+                    <div class="mb-6 border-b border-gray-200 pb-4">
+                        <h3 class="text-xl font-serif font-bold text-gray-900">總統令 <span class="text-sm font-sans font-normal text-gray-500 ml-2">毛總一義字第11500003號</span></h3>
+                        <p class="text-sm text-gray-400 mt-1">日期：毛憲元年 1月 7日</p>
+                    </div>
+                    <div class="font-serif text-lg leading-loose text-gray-800">
+                        <p>茲因 <span class="font-bold underline decoration-gold decoration-2 underline-offset-4">無名濡先生</span> 於「清黨」行動期間，忠心輔佐皇綱，剷除異議份子有功，其功勳卓著，足以表率帝國臣民。</p>
+                        <p class="mt-4">為感念其捍衛「以貓為本」之決心，特此敕封無名濡先生為「<span class="font-bold text-red">無星上將</span>」，並授予帝國一等吸貓勳章，即日生效，此令。</p>
+                    </div>
+                    <div class="mt-8 text-right font-serif font-bold text-lg">總統　賴成左</div>
+                </article>
+
+                <div class="flex space-x-4 pt-4">
+                    <a href="https://linevoom.line.me/user/_dUsRxJcBUnxLdfgDcrfaMuwLSRn4TDLahYpq-4Q" class="bg-red hover:bg-red-800 text-white px-8 py-3 rounded-sm font-bold tracking-wide transition shadow-lg border border-red-800">
+                        更多資訊
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- 國家象徵區 (神獸與神鳥照) -->
+    <section id="symbols" class="bg-gray-200 py-16 border-t border-gray-300">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-serif font-bold text-gray-900">國家精神象徵</h2>
+                <p class="text-gray-500 mt-2">National Symbols of the Empire</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- 護國神獸 -->
+                <div class="bg-white p-6 rounded shadow-lg border-t-4 border-black flex flex-col items-center">
+                    <h3 class="text-xl font-bold mb-4 text-center">護國神獸</h3>
+                    
+                    <!-- 神獸照片位 -->
+                    <div class="w-64 h-64 bg-gray-300 mb-6 border-4 border-double border-gray-400 relative overflow-hidden group">
+                        <img src="assets/odi.jpg" alt="歐弟照片" class="w-full h-full object-cover" onerror="this.style.display='none'">
+                        <!-- 佔位符 -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-200 text-gray-500 z-[-1]">
+                            <i class="fas fa-dog text-4xl mb-2"></i>
+                            <span class="text-xs">歐弟照片位</span>
+                        </div>
+                    </div>
+
+                    <h4 class="text-2xl font-serif font-bold text-red mb-2">歐弟 (Odie)</h4>
+                    <p class="text-sm text-gray-600 text-center px-4">
+                        帝國最高守護者。其存在象徵著忠誠與絕對的治癒力。任何意圖挑戰其地位者將面臨嚴厲制裁。
+                    </p>
+                </div>
+
+                <!-- 帝國神鳥 -->
+                <div class="bg-white p-6 rounded shadow-lg border-t-4 border-gold flex flex-col items-center">
+                    <h3 class="text-xl font-bold mb-4 text-center">帝國神鳥</h3>
+                    
+                    <!-- 神鳥照片位 -->
+                    <div class="w-64 h-64 bg-gray-300 mb-6 border-4 border-double border-gray-400 relative overflow-hidden group">
+                        <img src="assets/bird.jpg" alt="毛線帝雉照片" class="w-full h-full object-cover" onerror="this.style.display='none'">
+                        <!-- 佔位符 -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-200 text-gray-500 z-[-1]">
+                            <i class="fas fa-crow text-4xl mb-2"></i>
+                            <span class="text-xs">毛線帝雉照片位</span>
+                        </div>
+                    </div>
+
+                    <h4 class="text-2xl font-serif font-bold text-red mb-2">毛線帝雉</h4>
+                    <p class="text-sm text-gray-600 text-center px-4">
+                        象徵帝國的交織與多元包容（異議份子除外）。其色彩斑斕的羽毛是毛憲體制繁榮的象徵。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部 -->
+    <footer class="bg-gray-900 text-gray-500 py-12 border-t-4 border-gold">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-4 mb-6 md:mb-0">
+                <!-- 底部也放一個小國徽 -->
+                <div class="w-12 h-12 bg-gray-800 rounded-full border border-gray-600 overflow-hidden relative">
+                    <img src="assets/emblem.png" alt="國徽" class="w-full h-full object-cover opacity-50" onerror="this.style.display='none'">
+                    <div class="absolute inset-0 flex items-center justify-center z-[-1]"><i class="fas fa-sun"></i></div>
+                </div>
+                <div>
+                    <h2 class="text-white text-lg font-serif tracking-widest mb-1">大明帝國總統府</h2>
+                    <p class="text-xs uppercase tracking-wider text-gray-600">Office of the President</p>
+                </div>
+            </div>
+            
+            <div class="text-center md:text-right text-xs">
+                <p class="mt-2 text-gray-600">© 毛憲元年 (2026) 大明帝國 All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 自動更新日期與年份邏輯 -->
+    <script>
+        function updateImperialDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            
+            // 毛憲元年定義為西元 2026 年
+            // 若當前年份小於 2026，強制顯示元年
+            // 若當前年份大於 2026，則顯示 (年份 - 2025) 年
+            const startYear = 2026;
+            let maoYear = year - 2025; 
+            
+            let yearString = "元年";
+            if (maoYear > 1) {
+                yearString = maoYear + " 年";
+            }
+            
+            const dateString = `<i class="far fa-calendar-alt mr-2"></i>毛憲${yearString} ${month} 月 ${day} 日`;
+            
+            const dateElement = document.getElementById('imperial-date');
+            if (dateElement) {
+                dateElement.innerHTML = dateString;
+            }
+        }
+        
+        // 頁面載入時執行
+        window.onload = updateImperialDate;
+    </script>
+</body>
+</html>
