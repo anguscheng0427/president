@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>大明帝國總統府 | Office of the President</title>
+    <link rel="icon" href="assets/favicon.png" type="image/png"/>
+    <meta name="description" content="在賴總統的英明領導下，大明帝國邁入毛憲元年。總統強調，唯有貫徹清黨與確立正統，方能實現帝國的偉大復興。">
+    <meta property="og:image" content="assets/og_image.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -71,6 +75,13 @@
         .emblem-glow {
             filter: drop-shadow(0 0 5px rgba(204, 153, 0, 0.5));
         }
+
+        /* 印鑑特效：混合模式讓它看起來像蓋在紙上 */
+        .official-seal {
+            mix-blend-mode: multiply;
+            opacity: 0.85;
+            transform: rotate(-5deg); /* 稍微傾斜更自然 */
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -81,7 +92,7 @@
             <div class="flex space-x-6">
                 <span class="text-gold tracking-widest uppercase font-bold">Great Ming Empire</span>
                 <!-- 這裡加上 id="imperial-date" 讓 JavaScript 控制 -->
-                <span id="imperial-date"><i class="far fa-calendar-alt mr-2"></i>載入中...</span>
+                <span id="imperial-date"><i class="far fa-calendar-alt mr-2"></i>毛憲帝制</span>
             </div>
             <div class="hidden md:flex space-x-4">                
                 <a href="https://linevoom.line.me/user/_dUsRxJcBUnxLdfgDcrfaMuwLSRn4TDLahYpq-4Q" class="hover:text-white transition">最新動態</a>
@@ -141,7 +152,7 @@
                 </div>
                 
                 <p class="text-lg text-gray-400 leading-relaxed max-w-xl border-t border-gray-700 pt-6">
-                    <span class="text-white font-bold">「以貓為本，以毛治國」</span><br>
+                    <span class="text-white font-bold">「毛憲帝制的開創者，帝國復興的領航員。」</span><br>
                     在賴總統的英明領導下，大明帝國邁入毛憲元年。總統強調，唯有貫徹清黨與確立正統，方能實現帝國的偉大復興。
                 </p>
 
@@ -192,51 +203,96 @@
                 <div class="w-24 h-1 bg-gold mx-auto mt-6"></div>
             </div>
 
-            <div class="space-y-10">
+            <div class="space-y-12">
                 
                 <!-- 總統令 No.1 -->
-                <article class="bg-white p-8 md:p-10 shadow-sm border-l-8 border-red relative">
-                    <div class="absolute top-4 right-6 text-6xl text-gray-100 font-serif font-bold pointer-events-none select-none">01</div>
-                    <div class="mb-6 border-b border-gray-200 pb-4">
-                        <h3 class="text-xl font-serif font-bold text-gray-900">總統令 <span class="text-sm font-sans font-normal text-gray-500 ml-2">毛總一義字第11500001號</span></h3>
-                        <p class="text-sm text-gray-400 mt-1">日期：毛憲元年 1月 5日</p>
+                <article class="bg-white p-8 md:p-12 shadow-sm border-l-8 border-red relative overflow-hidden">
+                    <!-- 背景浮水印 -->
+                    <div class="absolute top-4 right-6 text-6xl text-gray-100 font-serif font-bold pointer-events-none select-none z-0">01</div>
+                    
+                    <div class="relative z-10">
+                        <!-- 標題與字號區塊 -->
+                        <div class="text-center mb-8 pb-4 border-b border-gray-200">
+                            <h3 class="text-3xl font-serif font-bold text-gray-900 mb-3 tracking-widest">總統令</h3>
+                            <p class="text-base font-serif font-medium text-gray-600">毛總一義字第11500001號</p>
+                        </div>
+
+                        <!-- 內文區塊 -->
+                        <div class="font-serif text-lg leading-loose text-gray-800 px-2 md:px-8 mb-10">
+                            <p>茲制定「<span class="font-bold text-red">毛憲帝制</span>」，定民國一一五年為「<span class="font-bold text-red">毛憲元年</span>」，並奉「毛線帝雉」為帝國神鳥、「歐弟」為護國神獸，以貓為本，以毛治國，此令。</p>
+                        </div>
+
+                        <!-- 簽署與日期區塊 (含印鑑) -->
+                        <div class="flex flex-col items-end mr-2 md:mr-8 relative mt-12">
+                            <div class="text-right relative z-10">
+                                <p class="text-2xl font-serif font-bold text-gray-900 mb-2">總統　賴成左</p>
+                                <p class="text-lg font-serif text-gray-600">毛憲元年 1 月 5 日</p>
+                                <!-- 印鑑圖片：絕對定位在名字旁邊 -->
+                                <img src="assets/seal.png" alt="總統之印" class="absolute -top-0 -left-20 w-16 h-16 official-seal pointer-events-none" onerror="this.style.display='none'">
+                            </div>
+                            
+                        </div>
                     </div>
-                    <div class="font-serif text-lg leading-loose text-gray-800">
-                        <p>茲制定「<span class="font-bold text-red">毛憲帝制</span>」，定民國一一五年為「<span class="font-bold text-red">毛憲元年</span>」，並奉「毛線帝雉」為帝國神鳥、「歐弟」為護國神獸，以貓為本，以毛治國，此令。</p>
-                    </div>
-                    <div class="mt-8 text-right font-serif font-bold text-lg">總統　賴成左</div>
                 </article>
 
                 <!-- 總統令 No.2 (清黨) -->
-                <article class="bg-white p-8 md:p-10 shadow-lg border-l-8 border-black relative transform md:-rotate-1">
-                    <div class="absolute top-4 right-6 text-6xl text-gray-100 font-serif font-bold pointer-events-none select-none">02</div>
-                    <div class="mb-6 border-b border-gray-200 pb-4 flex justify-between items-center">
-                        <div>
-                            <h3 class="text-xl font-serif font-bold text-red">總統令 <span class="text-sm font-sans font-normal text-gray-500 ml-2">毛總一義字第11500002號</span></h3>
-                            <p class="text-sm text-gray-400 mt-1">日期：毛憲元年 1月 6日</p>
+                <article class="bg-white p-8 md:p-12 shadow-lg border-l-8 border-black relative transform md:-rotate-1 overflow-hidden">
+                    <div class="absolute top-4 right-6 text-6xl text-gray-100 font-serif font-bold pointer-events-none select-none z-0">02</div>
+                    
+                    <div class="relative z-10">
+                        <!-- 標題與字號 -->
+                        <div class="text-center mb-8 pb-4 border-b border-gray-200">
+                            <h3 class="text-3xl font-serif font-bold text-red mb-3 tracking-widest">總統令</h3>
+                            <p class="text-base font-serif font-medium text-gray-600">毛總一義字第11500002號</p>
                         </div>
-                    </div>
-                    <div class="font-serif text-lg leading-loose text-gray-800">
-                        <p>茲為維護「毛憲帝制」之正統，捍衛帝國核心價值，即日起實施「清黨」行動。</p>
-                        <p class="mt-4">凡對國策存有二心，或意圖擾亂帝國綱紀者，均應予嚴厲整肅。特別標註異議份子「<span class="bg-black text-white px-1">P**gy</span>」長期散播悖離皇綱之言論，涉嫌挑戰護國神獸之權威，列為首要肅清對象，即刻生效，此令。</p>
-                    </div>
-                    <div class="mt-8 text-right font-serif font-bold text-lg relative">
-                        總統　賴成左
+
+                        <!-- 內文 -->
+                        <div class="font-serif text-lg leading-loose text-gray-800 px-2 md:px-8 mb-10">
+                            <p>茲為維護「毛憲帝制」之正統，捍衛帝國核心價值，即日起實施「清黨」行動。</p>
+                            <p class="mt-4">凡對國策存有二心，或意圖擾亂帝國綱紀者，均應予嚴厲整肅。特別標註異議份子「<span class="bg-black text-white px-1">P**gy</span>」長期散播悖離皇綱之言論，涉嫌挑戰護國神獸之權威，列為首要肅清對象，即刻生效，此令。</p>
+                        </div>
+
+                        <!-- 簽署 -->
+                        <div class="flex flex-col items-end mr-2 md:mr-8 relative mt-12">
+                            <div class="text-right relative z-10">
+                                <p class="text-2xl font-serif font-bold text-gray-900 mb-2">總統　賴成左</p>
+                                <p class="text-lg font-serif text-gray-600">毛憲元年 1 月 6 日</p>
+                                <!-- 印鑑圖片：絕對定位在名字旁邊 -->
+                                <img src="assets/seal.png" alt="總統之印" class="absolute -top-0 -left-20 w-16 h-16 official-seal pointer-events-none" onerror="this.style.display='none'">
+                            </div>
+
+                        </div>
                     </div>
                 </article>
 
                 <!-- 總統令 No.3 (授勳) -->
-                <article class="bg-white p-8 md:p-10 shadow-sm border-l-8 border-gold relative">
-                    <div class="absolute top-4 right-6 text-6xl text-gray-100 font-serif font-bold pointer-events-none select-none">03</div>
-                    <div class="mb-6 border-b border-gray-200 pb-4">
-                        <h3 class="text-xl font-serif font-bold text-gray-900">總統令 <span class="text-sm font-sans font-normal text-gray-500 ml-2">毛總一義字第11500003號</span></h3>
-                        <p class="text-sm text-gray-400 mt-1">日期：毛憲元年 1月 7日</p>
+                <article class="bg-white p-8 md:p-12 shadow-sm border-l-8 border-gold relative overflow-hidden">
+                    <div class="absolute top-4 right-6 text-6xl text-gray-100 font-serif font-bold pointer-events-none select-none z-0">03</div>
+                    
+                    <div class="relative z-10">
+                        <!-- 標題與字號 -->
+                        <div class="text-center mb-8 pb-4 border-b border-gray-200">
+                            <h3 class="text-3xl font-serif font-bold text-gray-900 mb-3 tracking-widest">總統令</h3>
+                            <p class="text-base font-serif font-medium text-gray-600">毛總一義字第11500003號</p>
+                        </div>
+
+                        <!-- 內文 -->
+                        <div class="font-serif text-lg leading-loose text-gray-800 px-2 md:px-8 mb-10">
+                            <p>茲因 <span class="font-bold underline decoration-gold decoration-2 underline-offset-4">無名濡先生</span> 於「清黨」行動期間，忠心輔佐皇綱，剷除異議份子有功，其功勳卓著，足以表率帝國臣民。</p>
+                            <p class="mt-4">為感念其捍衛「以貓為本」之決心，特此敕封無名濡先生為「<span class="font-bold text-red">無星上將</span>」，並授予帝國一等吸貓勳章，即日生效，此令。</p>
+                        </div>
+
+                        <!-- 簽署 -->
+                        <div class="flex flex-col items-end mr-2 md:mr-8 relative mt-12">
+                            <div class="text-right relative z-10">
+                                <p class="text-2xl font-serif font-bold text-gray-900 mb-2">總統　賴成左</p>
+                                <p class="text-lg font-serif text-gray-600">毛憲元年 1 月 7 日</p>
+                                <!-- 印鑑圖片：絕對定位在名字旁邊 -->
+                                <img src="assets/seal.png" alt="總統之印" class="absolute -top-0 -left-20 w-16 h-16 official-seal pointer-events-none" onerror="this.style.display='none'">
+                            </div>
+                            
+                        </div>
                     </div>
-                    <div class="font-serif text-lg leading-loose text-gray-800">
-                        <p>茲因 <span class="font-bold underline decoration-gold decoration-2 underline-offset-4">無名濡先生</span> 於「清黨」行動期間，忠心輔佐皇綱，剷除異議份子有功，其功勳卓著，足以表率帝國臣民。</p>
-                        <p class="mt-4">為感念其捍衛「以貓為本」之決心，特此敕封無名濡先生為「<span class="font-bold text-red">無星上將</span>」，並授予帝國一等吸貓勳章，即日生效，此令。</p>
-                    </div>
-                    <div class="mt-8 text-right font-serif font-bold text-lg">總統　賴成左</div>
                 </article>
 
                 <div class="flex space-x-4 pt-4">
@@ -274,7 +330,7 @@
 
                     <h4 class="text-2xl font-serif font-bold text-red mb-2">歐弟 (Odi)</h4>
                     <p class="text-sm text-gray-600 text-center px-4">
-                        帝國最高守護者。其存在象徵著忠誠與絕對的治癒力。任何意圖挑戰其地位者將面臨嚴厲制裁。
+                        帝國最高守護者。其存在象徵施政應如貓般靈活、優雅且具備絕對的自我中心與權威。
                     </p>
                 </div>
 
