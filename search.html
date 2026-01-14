@@ -180,13 +180,21 @@
             border: 1px solid var(--ming-gold);
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 20px rgba(0,0,0,0.8);
-            transform-origin: top right;
+            /* transform-origin: top right; // 手機版置中不需要 top right */
             animation: menuFadeIn 0.2s ease-out;
         }
         @keyframes menuFadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+            from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
+        /* 手機版動畫修正 */
+        @media (max-width: 768px) {
+            @keyframes menuFadeIn {
+                from { opacity: 0; transform: translate(-50%, -10px) scale(0.95); }
+                to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+            }
+        }
+
         .app-item:hover {
             background-color: rgba(204, 153, 0, 0.1);
         }
@@ -202,7 +210,7 @@
 <body class="flex flex-col">
 
     <!-- 頂部導航 -->
-    <header class="p-2 border-b border-white/10">
+    <header class="p-2 border-b border-white/10 relative z-50">
         <div class="max-w-7xl mx-auto flex justify-between items-center px-4">
             <div class="flex items-center space-x-4">
                 <span id="imperial-date" class="imperial-date-tag font-serif">
@@ -220,8 +228,20 @@
                         <i class="fas fa-th text-gold/80 hover:text-gold text-lg transition-transform hover:scale-110"></i>
                     </div>
                     
-                    <!-- 下拉選單 -->
-                    <div id="app-menu" class="hidden absolute right-0 mt-2 w-80 app-menu-dropdown rounded-xl z-50 p-4">
+                    <!-- 下拉選單 
+                         修改重點：
+                         - mobile (預設): fixed top-16 left-1/2 -translate-x-1/2 (置中且固定)
+                         - md (桌機): absolute top-full right-0 (原本的下拉選單)
+                    -->
+                    <div id="app-menu" class="hidden 
+                        fixed top-16 left-1/2 -translate-x-1/2 w-[90vw] max-w-[320px] 
+                        md:absolute md:top-full md:right-0 md:left-auto md:translate-x-0 md:w-80 md:mt-3
+                        app-menu-dropdown rounded-xl z-50 p-4">
+
+                        <div class="mb-3 px-2 border-b border-white/10 pb-2 text-center text-gold font-serif font-bold tracking-widest">
+                            帝國應用程式
+                        </div>
+
                         <div class="grid grid-cols-3 gap-2">
                             <!-- Google Apps -->
                             <a href="https://www.google.com/account" class="app-item flex flex-col items-center p-3 rounded-lg text-gray-300 hover:text-gold transition">
@@ -312,7 +332,7 @@
                 <input type="text" name="q" class="search-input bg-transparent border-none outline-none flex-grow ml-4 text-lg font-serif" placeholder="搜尋" autofocus autocomplete="off">
                 <div class="flex items-center space-x-4 mr-1">
                     <!-- Gemini 按鈕 (取代語音) -->
-                    <a href="https://gemini.google.com" class="flex items-center justify-center" title="資訊大臣 (Gemini)">
+                    <a href="https://gemini.google.com" target="_blank" class="flex items-center justify-center" title="資訊大臣 (Gemini)">
                         <i class="fas fa-wand-magic-sparkles text-gold/60 hover:text-gold transition text-lg animate-pulse"></i>
                     </a>
                 </div>
@@ -335,10 +355,9 @@
         </div>
     </main>
 
-    <!-- 底部 Footer (已修改) -->
+    <!-- 底部 Footer -->
     <footer class="text-gray-400 text-sm w-full mt-auto">
         <div class="max-w-7xl mx-auto">
-            <!-- 修改：使用 justify-between 將內容分開 -->
             <div class="px-6 py-3 border-b border-white/5 flex justify-between items-center">
                 <div class="flex items-center">
                     <i class="fas fa-map-marker-alt mr-2 text-gold"></i> 大明帝國 (Taiwan)
@@ -439,14 +458,13 @@
             { name: "總統府", url: "index.html", icon: "fa-building-columns" },
             { name: "YouTube", url: "https://www.youtube.com", icon: "fa-youtube" },
             { name: "GitHub", url: "https://github.com", icon: "fa-github" },
-            { name: "中山大學", url: "https://www.nsysu.edu.tw/", icon: "fa-university" } // 新增中山大學
+            { name: "中山大學", url: "https://www.nsysu.edu.tw/", icon: "fa-university" }
         ];
 
         let shortcuts = [];
 
         function init() {
             updateImperialDate();
-            // 更新 storage key 為 v4 以確保載入新的預設捷徑 (包含中山大學)
             const stored = localStorage.getItem('ming_shortcuts_v4'); 
             if (stored) {
                 shortcuts = JSON.parse(stored);
@@ -467,19 +485,19 @@
                 let iconHtml = '';
                 if (item.icon && item.icon.startsWith('fa-')) {
                     iconHtml = `<i class="fab ${item.icon} text-gold"></i>`;
-                    // 處理 solid 圖示
                     if(item.icon === 'fa-building-columns' || item.icon === 'fa-university') iconHtml = `<i class="fas ${item.icon} text-gold"></i>`;
                 } else {
                     const letter = item.name.charAt(0).toUpperCase();
                     iconHtml = `<span class="text-gold font-serif font-bold">${letter}</span>`;
                 }
 
+                // 修正：文字縮小 (text-xs)
                 el.innerHTML = `
                     <a href="${item.url}" class="flex flex-col items-center text-decoration-none w-full p-2 rounded-lg hover:bg-white/10 transition border border-transparent hover:border-white/5">
                         <div class="shortcut-icon">
                             ${iconHtml}
                         </div>
-                        <span class="text-sm font-serif text-gray-300 truncate w-full text-center tracking-wide group-hover:text-gold transition">${item.name}</span>
+                        <span class="text-xs font-serif text-gray-300 truncate w-full text-center tracking-wide group-hover:text-gold transition">${item.name}</span>
                     </a>
                     <button onclick="deleteShortcut(${index})" class="delete-btn absolute top-1 right-4 border rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-sm hover:bg-red-900 hover:text-white transition" title="移除捷徑">
                         <i class="fas fa-times"></i>
@@ -497,7 +515,7 @@
                     <div class="shortcut-icon !bg-transparent !border-gray-500 !text-gray-500 border-dashed group-hover:!border-gold group-hover:!text-gold group-hover:!bg-gold/10">
                         <i class="fas fa-plus"></i>
                     </div>
-                    <span class="text-sm font-serif text-gray-500 px-2 py-1 font-medium group-hover:text-gold transition">新增捷徑</span>
+                    <span class="text-xs font-serif text-gray-500 px-2 py-1 font-medium group-hover:text-gold transition">新增捷徑</span>
                 </div>
             `;
             container.appendChild(addBtn);
