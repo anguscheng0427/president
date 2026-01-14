@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大明帝國御用搜尋 | Imperial Search</title>
+    <link rel="icon" href="assets/favicon.png" type="image/png"/>
+    <meta name="description" content="大明帝國御用搜尋引擎，連結世界的窗口。">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --ming-red: #660000; /* 帝國紅 */
+            --ming-dark-red: #2b0000; /* 深邃紅 */
+            --ming-gold: #CC9900; /* 皇室金 */
+            --ming-light-gold: #e5c100; /* 亮金 */
+            --bg-color: #2b0000;
+            --text-main: #f3f4f6;
+            --glass-bg: rgba(0, 0, 0, 0.4);
+            --glass-border: rgba(204, 153, 0, 0.3);
+        }
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            /* 帝國紅深色漸層背景 */
+            background-image: radial-gradient(circle at center, #4a0404 0%, #1a0000 100%);
+            min-height: 100vh;
+        }
+        
+        .font-serif { font-family: 'Noto Serif TC', serif; }
+        
+        .text-gold { color: var(--ming-gold); }
+        .text-light-gold { color: var(--ming-light-gold); }
+        .bg-gold { background-color: var(--ming-gold); }
+        .border-gold { border-color: var(--ming-gold); }
+        
+        .text-red { color: var(--ming-red); }
+        .bg-red { background-color: var(--ming-red); }
+
+        /* 國徽發光特效 */
+        .emblem-glow {
+            box-shadow: 0 0 25px rgba(204, 153, 0, 0.3);
+            filter: drop-shadow(0 0 10px rgba(204, 153, 0, 0.5));
+        }
+
+        /* 搜尋框樣式 - 深色毛玻璃版 */
+        .search-bar-container {
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .search-bar-container:hover, .search-bar-container:focus-within {
+            background-color: rgba(0, 0, 0, 0.6);
+            border-color: var(--ming-gold);
+            box-shadow: 0 0 15px rgba(204, 153, 0, 0.2), 0 10px 25px rgba(0, 0, 0, 0.5);
+            transform: translateY(-1px);
+        }
+        
+        .search-input {
+            color: #fff;
+        }
+        .search-input::placeholder {
+            color: #9ca3af;
+        }
+
+        /* 按鈕樣式 - 金字黑底 */
+        .ming-btn {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--ming-gold);
+            color: var(--ming-light-gold);
+            padding: 0 24px;
+            height: 40px;
+            line-height: 38px;
+            border-radius: 4px;
+            font-family: 'Noto Serif TC', serif;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .ming-btn:hover {
+            background-color: var(--ming-gold);
+            color: #1a0000;
+            box-shadow: 0 0 15px rgba(204, 153, 0, 0.4);
+        }
+        .ming-btn-primary {
+            background-color: var(--ming-gold);
+            border: 1px solid var(--ming-gold);
+            color: #1a0000;
+            padding: 0 24px;
+            height: 40px;
+            line-height: 38px;
+            border-radius: 4px;
+            font-family: 'Noto Serif TC', serif;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .ming-btn-primary:hover {
+            background-color: rgba(0, 0, 0, 0.3);
+            color: var(--ming-gold);
+            box-shadow: 0 0 15px rgba(204, 153, 0, 0.4);
+        }
+
+        /* 捷徑圓形圖示 - 金色線條風格 */
+        .shortcut-icon {
+            background-color: rgba(0, 0, 0, 0.3);
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 8px;
+            border: 1px solid var(--ming-gold);
+            color: var(--ming-gold);
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .shortcut-item:hover .shortcut-icon {
+            transform: scale(1.05);
+            background-color: var(--ming-gold);
+            color: #2b0000;
+            box-shadow: 0 0 15px rgba(204, 153, 0, 0.6);
+        }
+        
+        /* 捷徑刪除按鈕 */
+        .delete-btn {
+            opacity: 0;
+            transition: opacity 0.2s;
+            background-color: #1a0000;
+            border-color: var(--ming-gold);
+            color: var(--ming-gold);
+        }
+        .shortcut-item:hover .delete-btn {
+            opacity: 1;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background-color: #1a0000;
+            border: 1px solid var(--ming-gold);
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        }
+
+        /* 日期顯示區 */
+        .imperial-date-tag {
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--ming-gold);
+            color: var(--ming-gold);
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            backdrop-filter: blur(4px);
+        }
+        
+        /* 應用程式選單 (新增) */
+        .app-menu-dropdown {
+            background-color: rgba(26, 0, 0, 0.95);
+            border: 1px solid var(--ming-gold);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            transform-origin: top right;
+            animation: menuFadeIn 0.2s ease-out;
+        }
+        @keyframes menuFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .app-item:hover {
+            background-color: rgba(204, 153, 0, 0.1);
+        }
+        
+        /* 頁尾 */
+        footer {
+            background-color: rgba(0, 0, 0, 0.3) !important;
+            backdrop-filter: blur(5px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+    </style>
+</head>
+<body class="flex flex-col">
+
+    <!-- 頂部導航 -->
+    <header class="p-2 border-b border-white/10">
+        <div class="max-w-7xl mx-auto flex justify-between items-center px-4">
+            <div class="flex items-center space-x-4">
+                <span id="imperial-date" class="imperial-date-tag font-serif">
+                    <i class="far fa-calendar-alt mr-2"></i>毛憲帝制
+                </span>
+            </div>
+            
+            <div class="flex items-center space-x-4 text-xs font-medium text-gray-300">
+                <a href="https://mail.google.com/mail/?authuser=0&ogbl" class="hover:text-gold transition hover:scale-110 hidden md:flex">批閱郵件</a>
+                <a href="https://www.google.com/imghp?hl=zh-TW&authuser=0&ogbl" class="hover:text-gold transition hover:scale-110 hidden md:flex">圖搜</a>
+                
+                <!-- 應用程式選單 (修改為點擊展開) -->
+                <div class="relative">
+                    <div onclick="toggleAppMenu()" class="w-8 h-8 hover:bg-white/10 rounded-full flex items-center justify-center cursor-pointer transition select-none">
+                        <i class="fas fa-th text-gold/80 hover:text-gold text-lg transition-transform hover:scale-110"></i>
+                    </div>
+                    
+                    <!-- 下拉選單 -->
+                    <div id="app-menu" class="hidden absolute right-0 mt-2 w-80 app-menu-dropdown rounded-xl z-50 p-4">
+                        <div class="grid grid-cols-3 gap-2">
+                            <!-- Google Apps -->
+                            <a href="https://www.google.com/account" class="app-item flex flex-col items-center p-3 rounded-lg text-gray-300 hover:text-gold transition">
+                                <i class="fas fa-user-circle text-2xl mb-2 text-blue-400"></i>
+                                <span class="text-xs">帳戶</span>
+                            </a>
+                            <a href="https://www.google.com/maps" class="app-item flex flex-col items-center p-3 rounded-lg text-gray-300 hover:text-gold transition">
+                                <i class="fas fa-map-marked-alt text-2xl mb-2 text-green-400"></i>
+                                <span class="text-xs">地圖</span>
+                            </a>
+                            <a href="https://www.youtube.com" class="app-item flex flex-col items-center p-3 rounded-lg text-gray-300 hover:text-gold transition">
+                                <i class="fab fa-youtube text-2xl mb-2 text-red-500"></i>
+                                <span class="text-xs">YouTube</span>
+                            </a>
+                            <a href="https://play.google.com" class="app-item flex flex-col items-center p-3 rounded-lg text-gray-300 hover:text-gold transition">
+                                <i class="fab fa-google-play text-2xl mb-2 text-teal-400"></i>
+                                <span class="text-xs">Play</span>
+                            </a>
+                            <a href="https://news.google.com" class="app-item flex flex-col items-center p-3 rounded-lg text-gray-300 hover:text-gold transition">
+                                <i class="far fa-newspaper text-2xl mb-2 text-red-400"></i>
+                                <span class="text-xs">新聞</span>
+                            </a>
+                            <a href="https://mail.google.com" class="app-item flex flex-col items-center p-3 rounded-lg text-gray-300 hover:text-gold transition">
+                                <i class="fas fa-envelope text-2xl mb-2 text-red-500"></i>
+                                <span class="text-xs">Gmail</span>
+                            </a>
+                            <a href="https://meet.google.com" class="app-item flex flex-col items-center p-3 rounded-lg text-gray-300 hover:text-gold transition">
+                                <i class="fas fa-video text-2xl mb-2 text-blue-300"></i>
+                                <span class="text-xs">Meet</span>
+                            </a>
+                            <a href="https://translate.google.com" class="app-item flex flex-col items-center p-3 rounded-lg text-gray-300 hover:text-gold transition">
+                                <i class="fas fa-language text-2xl mb-2 text-blue-500"></i>
+                                <span class="text-xs">翻譯</span>
+                            </a>
+                            <a href="https://drive.google.com" class="app-item flex flex-col items-center p-3 rounded-lg text-gray-300 hover:text-gold transition">
+                                <i class="fab fa-google-drive text-2xl mb-2 text-green-500"></i>
+                                <span class="text-xs">雲端硬碟</span>
+                            </a>
+                        </div>
+                        <div class="mt-4 pt-2 border-t border-white/10 text-center">
+                            <a href="https://chromewebstore.google.com/?hl=zh-tw" class="text-xs text-gold hover:underline">前往應用商殿</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 使用者頭像 -->
+                <div class="w-9 h-9 rounded-full border border-gold flex items-center justify-center overflow-hidden cursor-pointer relative group hover:border-gold hover:shadow-[0_0_10px_rgba(204,153,0,0.5)] hover:scale-110 hover:border-2 transition">
+                    <a href="https://accounts.google.com">
+                    <img src="assets/president.jpg" alt="User" class="w-full h-full object-cover opacity-90" onerror="this.style.display='none'">
+                    <span class="text-gold font-serif font-bold absolute" style="z-index:-1">賴</span>
+                    <!-- Tooltip -->
+                    <div class="absolute top-full right-0 mt-2 w-32 bg-[#1a0000] text-gold border border-gold text-center text-xs py-2 rounded shadow-lg opacity-0 group-hover:opacity-100 transition pointer-events-none z-50">
+                        總統閣下
+                    </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要內容區 -->
+    <main class="flex-grow flex flex-col items-center pt-[10vh] px-4 w-full">
+        
+        <!-- Logo 區域 -->
+        <div class="flex flex-col items-center mb-10 select-none animate-fade-in">
+            <!-- 國徽 -->
+            <div class="w-28 h-28 rounded-full border-4 border-gold emblem-glow overflow-hidden relative mb-6 flex items-center justify-center transform hover:scale-105 transition duration-500">
+                <img src="assets/emblem2.png" alt="國徽" class="w-full h-full object-cover" onerror="this.style.display='none'">
+            </div>
+
+            <!-- 文字標題 -->
+            <h1 class="text-5xl md:text-6xl font-serif font-black tracking-widest text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] mb-3">
+                大明帝國
+            </h1>
+            <div class="flex items-center space-x-2">
+                <div class="h-[1px] w-8 bg-gradient-to-r from-transparent to-gold"></div>
+                <p class="text-gold tracking-[0.4em] uppercase text-xs font-bold">
+                    The Great Ming Empire
+                </p>
+                <div class="h-[1px] w-8 bg-gradient-to-l from-transparent to-gold"></div>
+            </div>
+        </div>
+
+        <!-- 搜尋框 Form -->
+        <form action="https://www.google.com/search" method="GET" class="w-full max-w-[600px] relative mb-10 group">
+            <div class="search-bar-container flex items-center rounded-full px-5 py-3 w-full">
+                <i class="fas fa-search text-gold/60 text-lg group-hover:text-gold transition"></i>
+                <input type="text" name="q" class="search-input bg-transparent border-none outline-none flex-grow ml-4 text-lg font-serif" placeholder="搜尋" autofocus autocomplete="off">
+                <div class="flex items-center space-x-4 mr-1">
+                    <!-- Gemini 按鈕 (取代語音) -->
+                    <a href="https://gemini.google.com" class="flex items-center justify-center" title="資訊大臣 (Gemini)">
+                        <i class="fas fa-wand-magic-sparkles text-gold/60 hover:text-gold transition text-lg animate-pulse"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- 按鈕群組 -->
+            <div class="flex justify-center mt-8 space-x-4">
+                <button type="submit" class="ming-btn-primary">
+                    即往搜索
+                </button>
+                <button type="button" onclick="randomDecree()" class="ming-btn">
+                    隨機詔令
+                </button>
+            </div>
+        </form>
+
+        <!-- 自訂捷徑區域 -->
+        <div id="shortcuts-container" class="grid grid-cols-4 md:grid-cols-5 gap-6 w-full max-w-[650px] mt-2 p-4">
+            <!-- JS 動態生成 -->
+        </div>
+    </main>
+
+    <!-- 底部 Footer (已修改) -->
+    <footer class="text-gray-400 text-sm w-full mt-auto">
+        <div class="max-w-7xl mx-auto">
+            <!-- 修改：使用 justify-between 將內容分開 -->
+            <div class="px-6 py-3 border-b border-white/5 flex justify-between items-center">
+                <div class="flex items-center">
+                    <i class="fas fa-map-marker-alt mr-2 text-gold"></i> 大明帝國 (Taiwan)
+                </div>
+                <span class="text-gray-500 text-xs">© 毛憲元年 (2026) 大明帝國</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 新增捷徑 Modal -->
+    <div id="add-modal" class="fixed inset-0 modal-overlay hidden z-50 flex items-center justify-center">
+        <div class="modal-content rounded-lg w-full max-w-sm transform transition-all scale-100 p-1">
+            <div class="bg-gradient-to-b from-[#2b0000] to-[#1a0000] p-6 rounded-md">
+                <h3 class="text-gold text-xl mb-6 font-serif font-bold border-b border-gold/30 pb-2 flex items-center">
+                    <i class="fas fa-plus-circle mr-2"></i> 新增御用捷徑
+                </h3>
+                
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">名稱</label>
+                    <input type="text" id="shortcut-name" class="w-full bg-black/40 border border-gold/30 text-white px-3 py-2 rounded focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition font-serif placeholder-gray-600" placeholder="例如: 奏摺區 (YouTube)">
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">網址 (URL)</label>
+                    <input type="text" id="shortcut-url" class="w-full bg-black/40 border border-gold/30 text-white px-3 py-2 rounded focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition placeholder-gray-600" placeholder="https://...">
+                </div>
+                
+                <div class="flex justify-end space-x-3">
+                    <button onclick="closeModal()" class="text-gray-400 hover:text-white px-4 py-2 text-sm font-bold rounded transition">取消</button>
+                    <button onclick="saveShortcut()" class="bg-gold hover:bg-yellow-600 text-[#2b0000] px-6 py-2 text-sm font-bold rounded shadow-[0_0_15px_rgba(204,153,0,0.3)] transition transform active:scale-95 border border-transparent hover:border-white/20">確認新增</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 詔令卷軸 (Toast) -->
+    <div id="decree-toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-700 opacity-0 translate-y-[-50px] pointer-events-none">
+        <div class="bg-[#fff9e6] border-2 border-gold shadow-[0_0_30px_rgba(0,0,0,0.8)] px-10 py-6 relative max-w-md text-center rounded-sm">
+            <!-- 卷軸裝飾 -->
+            <div class="absolute top-[-12px] left-1/2 transform -translate-x-1/2 w-[110%] h-4 bg-[#8b0000] rounded-full shadow-lg border border-gold flex items-center justify-between px-2">
+                <div class="w-2 h-2 bg-gold rounded-full"></div><div class="w-2 h-2 bg-gold rounded-full"></div>
+            </div>
+            <div class="absolute bottom-[-12px] left-1/2 transform -translate-x-1/2 w-[110%] h-4 bg-[#8b0000] rounded-full shadow-lg border border-gold flex items-center justify-between px-2">
+                <div class="w-2 h-2 bg-gold rounded-full"></div><div class="w-2 h-2 bg-gold rounded-full"></div>
+            </div>
+            
+            <i class="fas fa-dragon text-5xl text-gold mb-3 opacity-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+            
+            <div class="relative z-10">
+                <h4 class="font-serif font-bold text-xl text-[#660000] mb-2 tracking-widest border-b border-[#660000]/20 inline-block pb-1">奉天承運</h4>
+                <p id="decree-text" class="text-md font-serif text-gray-800 leading-relaxed font-bold">今日天氣晴朗。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 日期更新邏輯
+        function updateImperialDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            
+            let maoYear = year - 2025; 
+            
+            let yearString = "元年";
+            if (maoYear > 1) {
+                yearString = maoYear + " 年";
+            }
+            if (maoYear <= 0) maoYear = "前";
+
+            const dateString = `<i class="far fa-calendar-alt mr-2"></i>毛憲${yearString} ${month} 月 ${day} 日`;
+            
+            const dateElement = document.getElementById('imperial-date');
+            if (dateElement) {
+                dateElement.innerHTML = dateString;
+            }
+        }
+        
+        // 應用程式選單切換
+        function toggleAppMenu() {
+            const menu = document.getElementById('app-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // 點擊其他地方關閉選單
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('app-menu');
+            const btn = document.querySelector('[onclick="toggleAppMenu()"]');
+            
+            if (menu && !menu.contains(e.target) && !btn.contains(e.target) && !menu.classList.contains('hidden')) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        // 捷徑資料管理
+        const DEFAULT_SHORTCUTS = [
+            { name: "總統府", url: "index.html", icon: "fa-building-columns" },
+            { name: "YouTube", url: "https://www.youtube.com", icon: "fa-youtube" },
+            { name: "GitHub", url: "https://github.com", icon: "fa-github" },
+            { name: "中山大學", url: "https://www.nsysu.edu.tw/", icon: "fa-university" } // 新增中山大學
+        ];
+
+        let shortcuts = [];
+
+        function init() {
+            updateImperialDate();
+            // 更新 storage key 為 v4 以確保載入新的預設捷徑 (包含中山大學)
+            const stored = localStorage.getItem('ming_shortcuts_v4'); 
+            if (stored) {
+                shortcuts = JSON.parse(stored);
+            } else {
+                shortcuts = [...DEFAULT_SHORTCUTS];
+            }
+            renderShortcuts();
+        }
+
+        function renderShortcuts() {
+            const container = document.getElementById('shortcuts-container');
+            container.innerHTML = '';
+
+            shortcuts.forEach((item, index) => {
+                const el = document.createElement('div');
+                el.className = 'shortcut-item flex flex-col items-center relative group w-full';
+                
+                let iconHtml = '';
+                if (item.icon && item.icon.startsWith('fa-')) {
+                    iconHtml = `<i class="fab ${item.icon} text-gold"></i>`;
+                    // 處理 solid 圖示
+                    if(item.icon === 'fa-building-columns' || item.icon === 'fa-university') iconHtml = `<i class="fas ${item.icon} text-gold"></i>`;
+                } else {
+                    const letter = item.name.charAt(0).toUpperCase();
+                    iconHtml = `<span class="text-gold font-serif font-bold">${letter}</span>`;
+                }
+
+                el.innerHTML = `
+                    <a href="${item.url}" class="flex flex-col items-center text-decoration-none w-full p-2 rounded-lg hover:bg-white/10 transition border border-transparent hover:border-white/5">
+                        <div class="shortcut-icon">
+                            ${iconHtml}
+                        </div>
+                        <span class="text-sm font-serif text-gray-300 truncate w-full text-center tracking-wide group-hover:text-gold transition">${item.name}</span>
+                    </a>
+                    <button onclick="deleteShortcut(${index})" class="delete-btn absolute top-1 right-4 border rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-sm hover:bg-red-900 hover:text-white transition" title="移除捷徑">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                container.appendChild(el);
+            });
+
+            // 加入 "新增按鈕"
+            const addBtn = document.createElement('div');
+            addBtn.className = 'shortcut-item flex flex-col items-center cursor-pointer group w-full';
+            addBtn.onclick = openModal;
+            addBtn.innerHTML = `
+                <div class="flex flex-col items-center w-full p-2 rounded-lg hover:bg-white/10 transition border border-transparent hover:border-white/5">
+                    <div class="shortcut-icon !bg-transparent !border-gray-500 !text-gray-500 border-dashed group-hover:!border-gold group-hover:!text-gold group-hover:!bg-gold/10">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <span class="text-sm font-serif text-gray-500 px-2 py-1 font-medium group-hover:text-gold transition">新增捷徑</span>
+                </div>
+            `;
+            container.appendChild(addBtn);
+        }
+
+        function openModal() {
+            document.getElementById('add-modal').classList.remove('hidden');
+            document.getElementById('shortcut-name').value = '';
+            document.getElementById('shortcut-url').value = '';
+            document.getElementById('shortcut-name').focus();
+        }
+
+        function closeModal() {
+            document.getElementById('add-modal').classList.add('hidden');
+        }
+
+        function saveShortcut() {
+            const name = document.getElementById('shortcut-name').value.trim();
+            let url = document.getElementById('shortcut-url').value.trim();
+
+            if (!name || !url) {
+                alert('請輸入完整資訊，勿欺君！');
+                return;
+            }
+
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
+
+            shortcuts.push({ name, url, icon: null });
+            localStorage.setItem('ming_shortcuts_v4', JSON.stringify(shortcuts));
+            
+            renderShortcuts();
+            closeModal();
+        }
+
+        function deleteShortcut(index) {
+            event.stopPropagation();
+            if (confirm('確定要移除此捷徑？')) {
+                shortcuts.splice(index, 1);
+                localStorage.setItem('ming_shortcuts_v4', JSON.stringify(shortcuts));
+                renderShortcuts();
+            }
+        }
+
+        function randomDecree() {
+            const decrees = [
+                "詔曰：今日宜多喝水，少看螢幕。",
+                "詔曰：搜尋知識者，賞賜心靈平靜一份。",
+                "公告：帝國貓糧庫存充足，請安心吸貓。",
+                "系統：偵測到您今日尚未向護國神獸請安。",
+                "本日運勢：搜尋結果將非常精準，如有雷同純屬巧合。",
+                "詔曰：午休時間應強制執行，違者發配邊疆。",
+                "提醒：P**gy 仍在監控範圍內，請小心搜尋關鍵字。",
+                "系統：已成功攔截一條來自異議份子的訊息。",
+                "本日宜：撰寫程式碼，忌：修改需求。"
+            ];
+            const text = decrees[Math.floor(Math.random() * decrees.length)];
+            const toast = document.getElementById('decree-toast');
+            const toastText = document.getElementById('decree-text');
+            
+            toastText.textContent = text;
+            toast.classList.remove('opacity-0', 'translate-y-[-50px]');
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-[-50px]');
+            }, 3500);
+        }
+
+        // Close modal on outside click
+        document.getElementById('add-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        window.onload = init;
+    </script>
+</body>
+</html>
