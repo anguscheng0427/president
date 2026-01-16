@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>大明帝國御用搜尋 | Imperial Search</title>
     <link rel="icon" href="assets/favicon.png" type="image/png"/>
     <meta name="description" content="大明帝國御用搜尋引擎，連結世界的窗口。">
@@ -16,10 +16,10 @@
     
     <style>
         :root {
-            --ming-red: #660000; /* 帝國紅 */
-            --ming-dark-red: #2b0000; /* 深邃紅 */
-            --ming-gold: #CC9900; /* 皇室金 */
-            --ming-light-gold: #e5c100; /* 亮金 */
+            --ming-red: #660000;
+            --ming-dark-red: #2b0000;
+            --ming-gold: #CC9900;
+            --ming-light-gold: #e5c100;
             --bg-color: #2b0000;
             --text-main: #f3f4f6;
             --glass-bg: rgba(0, 0, 0, 0.4);
@@ -30,28 +30,28 @@
             font-family: 'Noto Sans TC', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            /* 帝國紅深色漸層背景 */
             background-image: radial-gradient(circle at center, #4a0404 0%, #1a0000 100%);
             min-height: 100vh;
+            /* 禁止選取文字，避免長按選取干擾 */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         
         .font-serif { font-family: 'Noto Serif TC', serif; }
-        
         .text-gold { color: var(--ming-gold); }
-        .text-light-gold { color: var(--ming-light-gold); }
-        .bg-gold { background-color: var(--ming-gold); }
         .border-gold { border-color: var(--ming-gold); }
-        
+        .bg-gold { background-color: var(--ming-gold); }
         .text-red { color: var(--ming-red); }
-        .bg-red { background-color: var(--ming-red); }
 
-        /* 國徽發光特效 */
+        /* 國徽發光 */
         .emblem-glow {
             box-shadow: 0 0 25px rgba(204, 153, 0, 0.3);
             filter: drop-shadow(0 0 10px rgba(204, 153, 0, 0.5));
         }
 
-        /* 搜尋框樣式 - 深色毛玻璃版 */
+        /* 搜尋框 */
         .search-bar-container {
             background-color: var(--glass-bg);
             backdrop-filter: blur(10px);
@@ -59,41 +59,21 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
-        
         .search-bar-container:hover, .search-bar-container:focus-within {
             background-color: rgba(0, 0, 0, 0.6);
             border-color: var(--ming-gold);
             box-shadow: 0 0 15px rgba(204, 153, 0, 0.2), 0 10px 25px rgba(0, 0, 0, 0.5);
             transform: translateY(-1px);
         }
-        
-        .search-input {
-            color: #fff;
+        /* 搜尋框內文字可選取 */
+        .search-input { 
+            color: #fff; 
+            -webkit-user-select: text;
+            user-select: text;
         }
-        .search-input::placeholder {
-            color: #9ca3af;
-        }
+        .search-input::placeholder { color: #9ca3af; }
 
-        /* 按鈕樣式 - 金字黑底 */
-        .ming-btn {
-            background-color: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--ming-gold);
-            color: var(--ming-light-gold);
-            padding: 0 24px;
-            height: 40px;
-            line-height: 38px;
-            border-radius: 4px;
-            font-family: 'Noto Serif TC', serif;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .ming-btn:hover {
-            background-color: var(--ming-gold);
-            color: #1a0000;
-            box-shadow: 0 0 15px rgba(204, 153, 0, 0.4);
-        }
+        /* 按鈕 */
         .ming-btn-primary {
             background-color: var(--ming-gold);
             border: 1px solid var(--ming-gold);
@@ -113,8 +93,27 @@
             color: var(--ming-gold);
             box-shadow: 0 0 15px rgba(204, 153, 0, 0.4);
         }
+        .ming-btn {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--ming-gold);
+            color: var(--ming-light-gold);
+            padding: 0 24px;
+            height: 40px;
+            line-height: 38px;
+            border-radius: 4px;
+            font-family: 'Noto Serif TC', serif;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .ming-btn:hover {
+            background-color: var(--ming-gold);
+            color: #1a0000;
+            box-shadow: 0 0 15px rgba(204, 153, 0, 0.4);
+        }
 
-        /* 捷徑圓形圖示 - 金色線條風格 */
+        /* 捷徑樣式 */
         .shortcut-icon {
             background-color: rgba(0, 0, 0, 0.3);
             width: 52px;
@@ -130,10 +129,10 @@
             transition: all 0.3s;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
-        /* 修改：Hover 時只加強光暈，不填滿背景色，避免擋住圖示 */
+        
         .shortcut-item:hover .shortcut-icon {
             transform: scale(1.05);
-            /* background-color: var(--ming-gold);  <-- 移除此行 */
+            /* background-color: var(--ming-gold); 移除填滿 */
             box-shadow: 0 0 15px rgba(204, 153, 0, 0.8), inset 0 0 10px rgba(204, 153, 0, 0.2);
             border-color: #fff;
             color: #fff;
@@ -156,40 +155,51 @@
             cursor: pointer;
             z-index: 20;
         }
-        /* 電腦版 Hover 顯示 */
+        
+        /* 電腦版 (md以上) Hover 顯示三個點 */
         @media (min-width: 768px) {
             .shortcut-item:hover .shortcut-menu-btn {
                 opacity: 1;
             }
         }
-        /* 手機版長按後顯示 */
-        .shortcut-item.show-menu .shortcut-menu-btn {
-            opacity: 1;
+        /* 手機版 (小於768px) 隱藏三個點，靠長按觸發 */
+        @media (max-width: 767px) {
+            .shortcut-menu-btn {
+                display: none !important;
+            }
         }
 
         /* 捷徑操作選單 (彈出層) */
         .shortcut-options {
             display: none;
             position: absolute;
-            top: 30px;
-            right: -10px;
+            top: 40px;
+            right: -20px;
             background-color: #1a0000;
             border: 1px solid var(--ming-gold);
             border-radius: 4px;
             z-index: 30;
-            min-width: 80px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            min-width: 110px; /* 加寬一點以容納新分頁選項 */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.8);
             flex-direction: column;
         }
         .shortcut-options.active {
             display: flex;
+            animation: fadeIn 0.2s;
         }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .shortcut-option-item {
-            padding: 6px 12px;
-            font-size: 12px;
+            padding: 8px 12px;
+            font-size: 13px;
             color: #ccc;
             cursor: pointer;
             border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
         }
         .shortcut-option-item:hover {
             background-color: rgba(204, 153, 0, 0.2);
@@ -197,6 +207,11 @@
         }
         .shortcut-option-item:last-child {
             border-bottom: none;
+        }
+        .shortcut-option-item i {
+            width: 20px;
+            text-align: center;
+            margin-right: 8px;
         }
 
         /* Modal */
@@ -285,30 +300,41 @@
         .history-delete:hover {
             color: #f44;
         }
+        
+        /* 頭像樣式 */
+        .imperial-avatar-container {
+            transition: all 0.3s ease;
+        }
+        .imperial-avatar-container:hover {
+            border-color: var(--ming-light-gold);
+            box-shadow: 0 0 0 2px var(--ming-gold), 0 0 20px var(--ming-gold);
+            transform: scale(1.05);
+        }
     </style>
 </head>
-<body class="flex flex-col" onclick="closeAllMenus()">
+<!-- 禁用右鍵 oncontextmenu="return false;" -->
+<body class="flex flex-col" onclick="closeAllMenus()" oncontextmenu="return false;">
 
-    <!-- 頂部導航 (維持 v9 原樣) -->
+    <!-- 頂部導航 -->
     <header class="p-2 border-b border-white/10 relative z-50">
         <div class="max-w-7xl mx-auto flex justify-between items-center px-4">
             <div class="flex items-center space-x-4">
-                <span id="imperial-date" class="imperial-date-tag font-serif" title="今日日期">
+                <span id="imperial-date" class="imperial-date-tag font-serif">
                     <i class="far fa-calendar-alt mr-2"></i>毛憲帝制
                 </span>
             </div>
             
             <div class="flex items-center space-x-4 text-xs font-medium text-gray-300">
-                <a href="https://mail.google.com/mail/?authuser=0&ogbl" class="hover:text-gold transition hover:scale-110 hidden md:flex" title="Gmail">批閱郵件</a>
-                <a href="https://www.google.com/imghp?hl=zh-TW&authuser=0&ogbl" class="hover:text-gold transition hover:scale-110 hidden md:flex" title="圖片搜尋">圖搜</a>
+                <a href="https://mail.google.com/mail/?authuser=0&ogbl" class="hover:text-gold transition hover:scale-110 hidden md:flex">批閱郵件</a>
+                <a href="https://www.google.com/imghp?hl=zh-TW&authuser=0&ogbl" class="hover:text-gold transition hover:scale-110 hidden md:flex">圖搜</a>
                 
-                <!-- 應用程式選單 (維持 v9 圖示 fa-th) -->
+                <!-- 應用程式選單 (圖示修正回 fa-grip) -->
                 <div class="relative">
                     <div onclick="toggleAppMenu(event)" class="w-8 h-8 hover:bg-white/10 rounded-full flex items-center justify-center cursor-pointer transition select-none" title="應用程式">
                         <i class="fas fa-grip text-gold/80 hover:text-gold text-lg transition-transform hover:scale-110"></i>
                     </div>
                     
-                    <!-- App 下拉選單 (維持 v9 結構 + 手機版置中) -->
+                    <!-- App 下拉選單 -->
                     <div id="app-menu" class="hidden 
                         fixed top-16 left-1/2 -translate-x-1/2 w-[90vw] max-w-[320px] 
                         md:absolute md:top-full md:right-0 md:left-auto md:translate-x-0 md:w-80 md:mt-3
@@ -338,14 +364,14 @@
                 <!-- 使用者頭像 & 選單 -->
                 <div class="relative ml-1">
                     <!-- 頭像按鈕 -->
-                    <div onclick="toggleUserMenu(event)" class="w-9 h-9 rounded-full border border-gold cursor-pointer relative group hover:border-gold hover:shadow-[0_0_10px_rgba(204,153,0,0.5)] hover:scale-110 hover:border-2 transition select-none overflow-hidden" title="使用者帳戶">
+                    <div onclick="toggleUserMenu(event)" class="w-9 h-9 rounded-full border border-gold cursor-pointer relative group hover:border-gold hover:shadow-[0_0_10px_rgba(204,153,0,0.5)] hover:scale-110 hover:border-2 transition select-none overflow-hidden">
                         <div class="absolute inset-0 flex items-center justify-center bg-red-900 z-0">
                             <span class="text-gold font-serif font-bold text-base pb-[1px]">賴</span>
                         </div>
                         <img src="assets/president.jpg" alt="User" class="w-full h-full object-cover opacity-90 relative z-10" onerror="this.style.display='none'">
                     </div>
 
-                    <!-- 使用者下拉選單 (維持 v9 結構 + 修正：頭像顯示圖片) -->
+                    <!-- 使用者下拉選單 (內容修正為您原檔的樣式) -->
                     <div id="user-menu" class="hidden 
                         fixed top-16 left-1/2 -translate-x-1/2 w-[90vw] max-w-[300px]
                         md:absolute md:top-full md:right-0 md:left-auto md:translate-x-0 md:w-72 md:mt-3
@@ -354,7 +380,7 @@
                         <!-- 用戶資訊區 -->
                         <div class="p-4 border-b border-white/10 bg-black/20">
                             <div class="flex items-center space-x-3 mb-3">
-                                <!-- 修正：顯示照片 -->
+                                <!-- 顯示照片 -->
                                 <div class="w-12 h-12 rounded-full bg-red-900 border border-gold flex items-center justify-center shrink-0 overflow-hidden relative">
                                     <div class="absolute inset-0 flex items-center justify-center bg-red-900 z-0">
                                         <span class="text-gold font-serif font-bold">賴</span>
@@ -372,7 +398,7 @@
                             </a>
                         </div>
                         
-                        <!-- 其他選項 (回復 v9 的選項：新增/登出) -->
+                        <!-- 其他選項 (還原為搜尋記錄、儲存項目、設定) -->
                         <div class="p-2 border-b border-white/10">
                             <a href="https://myactivity.google.com/product/search" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/10 hover:text-white rounded flex items-center">
                                 <i class="fas fa-clock-rotate-left w-5 text-center mr-3"></i> 搜尋記錄
@@ -389,12 +415,14 @@
                             </a>
                         </div>
                         
-                        <!-- 底部條款 -->
-                        <!-- <div class="py-2 bg-black/20 text-center text-xs text-gray-500">
+                        <!-- 底部條款 (原本是註解掉的，這裡保留註解) -->
+                        <!-- 
+                        <div class="py-2 bg-black/20 text-center text-xs text-gray-500">
                             <a href="#" class="hover:text-gray-300 mx-2">隱私權</a>
                             <span>•</span>
                             <a href="#" class="hover:text-gray-300 mx-2">服務條款</a>
-                        </div> -->
+                        </div> 
+                        -->
                     </div>
                 </div>
             </div>
@@ -439,7 +467,7 @@
                 </div>
             </form>
             
-            <!-- 搜尋紀錄選單 (新增) -->
+            <!-- 搜尋紀錄選單 -->
             <div id="history-dropdown" class="search-history-dropdown hidden absolute top-full left-4 right-4 z-50">
                 <!-- 由 JS 填充 -->
             </div>
@@ -554,7 +582,7 @@
             menu.classList.toggle('hidden');
         }
 
-        // 使用者選單切換 (新功能)
+        // 使用者選單切換
         function toggleUserMenu(e) {
             e.stopPropagation();
             const menu = document.getElementById('user-menu');
@@ -585,7 +613,6 @@
 
         function init() {
             updateImperialDate();
-            // 延續 v4，資料結構不變
             const stored = localStorage.getItem('ming_shortcuts_v4'); 
             if (stored) {
                 shortcuts = JSON.parse(stored);
@@ -604,7 +631,7 @@
                 const el = document.createElement('div');
                 el.className = 'shortcut-item flex flex-col items-center relative group w-full';
                 
-                // 手機長按邏輯
+                // 手機長按邏輯 (觸發選單)
                 el.addEventListener('touchstart', function() {
                     longPressTimer = setTimeout(() => {
                         showShortcutMenu(index);
@@ -621,7 +648,6 @@
                 let iconHtml = '';
                 if (item.icon && item.icon.startsWith('fa')) {
                     iconHtml = `<i class="${item.icon} text-gold"></i>`;
-                    // if(item.icon === 'fa-building-columns' || item.icon === 'fa-graduation-cap') iconHtml = `<i class="fas ${item.icon} text-gold"></i>`;
                 } else {
                     const letter = item.name.charAt(0).toUpperCase();
                     iconHtml = `<span class="text-gold font-serif font-bold">${letter}</span>`;
@@ -635,18 +661,21 @@
                         <span class="text-xs font-serif text-gray-300 truncate w-full text-center tracking-wide mt-1 group-hover:text-gold transition">${item.name}</span>
                     </a>
                     
-                    <!-- 編輯/移除選單按鈕 (三個點) -->
+                    <!-- 編輯/移除選單按鈕 (三個點 - 電腦版 Hover 顯示) -->
                     <div class="shortcut-menu-btn absolute top-0 right-2" onclick="toggleShortcutMenu(event, ${index})">
                         <i class="fas fa-ellipsis-v"></i>
                     </div>
 
                     <!-- 選單內容 -->
                     <div id="shortcut-menu-${index}" class="shortcut-options">
+                        <div class="shortcut-option-item" onclick="openNewTab('${item.url}')">
+                            <i class="fas fa-external-link-alt"></i>開新分頁
+                        </div>
                         <div class="shortcut-option-item" onclick="openEditModal(${index})">
-                            <i class="fas fa-pen mr-2"></i>編輯
+                            <i class="fas fa-pen"></i>編輯
                         </div>
                         <div class="shortcut-option-item text-red-400" onclick="deleteShortcut(${index})">
-                            <i class="fas fa-trash mr-2"></i>移除
+                            <i class="fas fa-trash"></i>移除
                         </div>
                     </div>
                 `;
@@ -668,6 +697,12 @@
             container.appendChild(addBtn);
         }
 
+        // 新增功能：在新分頁開啟 (彌補無右鍵)
+        function openNewTab(url) {
+            window.open(url, '_blank');
+            closeAllMenus();
+        }
+
         // 捷徑選單控制
         function toggleShortcutMenu(e, index) {
             e.preventDefault();
@@ -682,6 +717,9 @@
 
         function showShortcutMenu(index) {
             // 手機長按觸發
+            // 先關閉其他的
+            document.querySelectorAll('.shortcut-options').forEach(el => el.classList.remove('active'));
+            
             const menu = document.getElementById(`shortcut-menu-${index}`);
             if (menu) menu.classList.add('active');
             if (navigator.vibrate) navigator.vibrate(50); // 震動回饋
@@ -735,9 +773,6 @@
             if (index === -1) {
                 shortcuts.push(newItem);
             } else {
-                // 如果是原有的，保留 icon 屬性 (如果是預設的話) 
-                // 這裡簡化邏輯：編輯一律變文字圖示，除非很複雜的判斷
-                // 為了保持簡單，直接覆蓋
                 shortcuts[index] = newItem;
             }
 
