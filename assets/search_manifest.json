@@ -1,0 +1,23 @@
+{
+    "name": "大明帝國 搜尋入口 | Imperial Search",
+    "short_name": "搜尋入口",
+    "description": "大明帝國御用搜尋引擎，連結世界的窗口。",
+    "icons": [
+      {
+        "src": "/assets/favicon.png",
+        "sizes": "32x32",
+        "type": "image/png"
+      },
+      {
+        "src": "/assets/app_icon_512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "start_url": "/search.html",
+    "display": "standalone",
+    "background_color": "#660000",
+    "theme_color": "#2b0000",
+    "lang": "zh-TW"
+  }
+  
